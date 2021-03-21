@@ -12,7 +12,7 @@ const Todo = ({text,todos,setTodos,todo}) => {
     const completeHandler = () => {
 
         setTodos(todos.map((item) => {
-            if (item.id == todo.id) {
+            if (item.id === todo.id) {
 
                 return {
                     ...item,completed: !item.completed

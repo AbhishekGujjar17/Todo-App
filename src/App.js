@@ -1,70 +1,69 @@
-import React, {useState,useEffect} from 'react';
-import Form from './components/Form';
-import TodoList from './components/TodoList.';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Form from "./components/Form";
+import TodoList from "./components/TodoList.";
+import "./App.css";
 
 function App() {
-  const [inputText,setInputText] = useState("");
-  const [todos,setTodos] = useState([]);
-  const [status,setStatus] = useState("all");
-  const [filteredTodos,setFilterTodos] = useState([]);
+  const [inputText, setInputText] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [status, setStatus] = useState("all");
+  const [filteredTodos, setFilterTodos] = useState([]);
 
-  useEffect ( () =>{
+  useEffect(() => {
     getLocalTodos();
-  },[])
+  }, []);
 
-  useEffect( () => {
+  const saveLocalTodos = React.useCallback(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  },[todos]);
 
-    const filterHandler = () => {
+  useEffect(() => {
 
-      switch (status){
-  
+    function filterHandler() {
+      switch (status) {
         case "completed":
-          setFilterTodos(todos.filter((todo) => todo.completed === true))
+          setFilterTodos(todos.filter((todo) => todo.completed === true));
           break;
         case "uncompleted":
-          setFilterTodos(todos.filter((todo) => todo.completed === false))
+          setFilterTodos(todos.filter((todo) => todo.completed === false));
           break;
         default:
-          setFilterTodos(todos)
+          setFilterTodos(todos);
           break;
-  
       }
-    }
+    };
+    filterHandler();
     saveLocalTodos();
+  }, [todos, status,saveLocalTodos]);
 
 
-  },[todos,status]);
 
-
-  
-
-  const saveLocalTodos = ( ) => {
-    localStorage.setItem("todos",JSON.stringify(todos));
-  };
-
-  const getLocalTodos = ( ) => {
-    if (localStorage.getItem("todos") === null){
-
-      localStorage.setItem("todos",JSON.stringify([]));
-
+  const getLocalTodos = () => {
+    if (localStorage.getItem("todos") === null) {
+      localStorage.setItem("todos", JSON.stringify([]));
     } else {
-      let todolocal = JSON.parse(localStorage.getItem("todos"))
+      let todolocal = JSON.parse(localStorage.getItem("todos"));
       setTodos(todolocal);
     }
   };
-  
-  
-
-
 
   return (
     <div className="App">
       <header>
-         <h1>Your's Todo List</h1>
+        <h1>Your's Todo List</h1>
       </header>
-      <Form inputText = {inputText} setInputText={setInputText} todos = {todos} setTodos={setTodos} setStatus={setStatus}/>
-      <TodoList todos={todos} setTodos = {setTodos} filteredTodos = {filteredTodos}/>
+      <Form
+        inputText={inputText}
+        setInputText={setInputText}
+        todos={todos}
+        setTodos={setTodos}
+        setStatus={setStatus}
+      />
+      <TodoList
+        todos={todos}
+        setTodos={setTodos}
+        filteredTodos={filteredTodos}
+      />
     </div>
   );
 }
