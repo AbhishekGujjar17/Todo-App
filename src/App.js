@@ -9,37 +9,42 @@ function App() {
   const [status,setStatus] = useState("all");
   const [filteredTodos,setFilterTodos] = useState([]);
 
+  useEffect ( () =>{
+    getLocalTodos();
+  },[])
+
   useEffect( () => {
 
-    filterHandler()
+    const filterHandler = () => {
+
+      switch (status){
+  
+        case "completed":
+          setFilterTodos(todos.filter((todo) => todo.completed === true))
+          break;
+        case "uncompleted":
+          setFilterTodos(todos.filter((todo) => todo.completed === false))
+          break;
+        default:
+          setFilterTodos(todos)
+          break;
+  
+      }
+    }
+    saveLocalTodos();
 
 
   },[todos,status]);
 
 
-  const filterHandler = () => {
-
-    switch (status){
-
-      case "completed":
-        setFilterTodos(todos.filter((todo) => todo.completed === true))
-        break;
-      case "uncompleted":
-        setFilterTodos(todos.filter((todo) => todo.completed === false))
-        break;
-      default:
-        setFilterTodos(todos)
-        break;
-
-    }
-  }
+  
 
   const saveLocalTodos = ( ) => {
     localStorage.setItem("todos",JSON.stringify(todos));
   };
 
   const getLocalTodos = ( ) => {
-    if (localStorage.grtItem("todos") === null){
+    if (localStorage.getItem("todos") === null){
 
       localStorage.setItem("todos",JSON.stringify([]));
 
